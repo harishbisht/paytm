@@ -16,23 +16,23 @@ pip install paytm
 * Then go to your django settings page and paste the below code and change it according to your need
 
 ```python
-PAYTM_COMPANY_NAME = "PICKRR TECHNOLOGIES"
-PAYTM_CUSTOMER_ID = ""
+PAYTM_MERCHANT_COMPANY_NAME = "<YOUR-COMPANY-NAME>"
+PAYTM_CUSTOMER_ID = "<YOUR REGISTERED EMAIL ID AT PAYTM>"
 PAYTM_INDUSTRY_TYPE_ID = "Retail"
 PAYTM_CHANNEL_ID = "WEB"
 PAYTM_STAGING = True
 if PAYTM_STAGING:
-    PAYTM_MERCHANT_KEY = "<YOUR-MERCHANT-KEY>"
+    PAYTM_MERCHANT_KEY = "<YOUR-STAGING-MERCHANT-KEY>"
     PAYTM_MERCHANT_ID = "<YOUR-MERCHANT-ID>"
     PAYTM_CALLBACK_URL = "http://localhost:8000/response/"
     PAYTM_WEBSITE = "WEB_STAGING"
     PAYTM_TRANSACTION_STATUS_URL = "https://pguat.paytm.com/oltp/HANDLER_INTERNAL/TXNSTATUS"
     PAYTM_PAYMENT_GATEWAY_URL = "https://pguat.paytm.com/oltp-web/processTransaction"
 else:
-    PAYTM_MERCHANT_KEY = "<YOUR-MERCHANT-KEY>"
-    PAYTM_MERCHANT_ID = "<YOUR-MERCHANT-ID>"
-    PAYTM_CALLBACK_URL = ""
-    PAYTM_WEBSITE = "WEB-LIVE"
+    PAYTM_MERCHANT_KEY = "<YOUR-LIVE-MERCHANT-KEY>"
+    PAYTM_MERCHANT_ID = "<YOUR-LIVE-MERCHANT-ID>"
+    PAYTM_CALLBACK_URL = "<YOUR-LIVE-CALLBACK-URL>"
+    PAYTM_WEBSITE = "WEB_LIVE"
     PAYTM_TRANSACTION_STATUS_URL = "https://secure.paytm.in/oltp/HANDLER_INTERNAL/TXNSTATUS"
     PAYTM_PAYMENT_GATEWAY_URL = "https://secure.paytm.com/oltp-web/processTransaction"
 
@@ -41,6 +41,7 @@ else:
 * For paytm payment page pass unique OrderId and BillAmount
 
 ```python
+#views.py
 from paytm.payments import PaytmPaymentPage
 from paytm import Checksum
 def payment(request):
@@ -53,10 +54,14 @@ def payment(request):
                 'TXN_AMOUNT': bill_amount,
             }
     return PaytmPaymentPage(data_dict)
+    
+#urls.py
+url(r'^payment/', 'views.payment', name='payment'),
 ```
 
 * After the completion of payment process, paytm return the response in callback URL for that first authenticate the return request
 ```python
+#views.py
 from django.http import HttpResponse
 from paytm.payments import VerifyPaytmResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -70,4 +75,7 @@ def response(request):
     else:
         return HttpResponse("Verification Failed")
     return HttpResponse(status=200)
+    
+#urls.py
+url(r'^response/', 'views.response', name='response'),
 ```
