@@ -8,7 +8,7 @@ except:
 
 
 setup(name='paytm',
-      version='0.1.1',
+      version='0.1.6',
       description='paytm payment gateway',
       long_description=README,
       url='http://github.com/harishbisht/paytm',
