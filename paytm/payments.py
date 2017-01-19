@@ -9,10 +9,11 @@ COMPANY_NAME = settings.PAYTM_MERCHANT_COMPANY_NAME
 CALLBACK_URL = settings.PAYTM_CALLBACK_URL
 PAYTM_PAYMENT_GATEWAY_URL = settings.PAYTM_PAYMENT_GATEWAY_URL
 PAYTM_TRANSACTION_STATUS_URL = settings.PAYTM_TRANSACTION_STATUS_URL
-PAYTM_CUSTOMER_ID = settings.PAYTM_CUSTOMER_ID
 PAYTM_INDUSTRY_TYPE_ID = settings.PAYTM_INDUSTRY_TYPE_ID
 PAYTM_WEBSITE = settings.PAYTM_WEBSITE
 PAYTM_CHANNEL_ID = settings.PAYTM_CHANNEL_ID
+PAYTM_EMAIL = settings.PAYTM_EMAIL
+PAYTM_MOBILE = settings.PAYTM_MOBILE
 
 def GeneratePaymentPage(param_dict):
     HTML = """<html>
@@ -33,17 +34,16 @@ def GeneratePaymentPage(param_dict):
     return HTML
 
 
-
-
 def PaytmPaymentPage(param_dict):
     param_dict['MID'] = MERCHANT_ID
-    param_dict['CUST_ID'] = PAYTM_CUSTOMER_ID
     param_dict['INDUSTRY_TYPE_ID'] = PAYTM_INDUSTRY_TYPE_ID
     param_dict['WEBSITE'] = PAYTM_WEBSITE
     param_dict['CHANNEL_ID'] = PAYTM_CHANNEL_ID
     param_dict['CALLBACK_URL'] = CALLBACK_URL
+    param_dict['MOBILE_NO'] = PAYTM_MOBILE
+    param_dict['EMAIL'] = PAYTM_EMAIL
     param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
-    return HttpResponse(GeneratePaymentPage(param_dict))
+    return (GeneratePaymentPage(param_dict))
 
 
 def VerifyPaytmResponse(response):
